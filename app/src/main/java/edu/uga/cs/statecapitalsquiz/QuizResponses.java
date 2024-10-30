@@ -2,24 +2,24 @@ package edu.uga.cs.statecapitalsquiz;
 
 public class QuizResponses {
     private long id;
-    private int quizID;
-    private int quizQuestionID;
+    private long quizID;
+    private long quizQuestionID; // Change this to long
     private String userAnswer;
-
 
     public QuizResponses() {
         this.id = -1;
         this.quizID = -1;
-        this.quizQuestionID = -1;
+        this.quizQuestionID = -1; // Change this to long
         this.userAnswer = null;
     }
 
-    public QuizResponses(int quizID, int quizQuestionID, String userAnswer) {
+    public QuizResponses(long quizID, long quizQuestionID, String userAnswer) {
         this.id = -1;
         this.quizID = quizID;
-        this.quizQuestionID = quizQuestionID;
+        this.quizQuestionID = quizQuestionID; // <-- This should be a long, but you are passing a String here
         this.userAnswer = userAnswer;
     }
+
 
     public long getId() {
         return this.id;
@@ -29,7 +29,7 @@ public class QuizResponses {
         this.id = id;
     }
 
-    public int getQuizID() {
+    public long getQuizID() {
         return this.quizID;
     }
 
@@ -37,7 +37,7 @@ public class QuizResponses {
         this.quizID = quizID;
     }
 
-    public int getQuizQuestionID() {
+    public long getQuizQuestionID() {
         return this.quizQuestionID;
     }
 

@@ -69,7 +69,8 @@ public class QuizQuestionsData {
 
                         // get all attribute values of this job lead
                         columnIndex = cursor.getColumnIndex( QuizDBHelper.QUIZ_QUESTIONS_COLUMN_ID);
-                        long id = cursor.getLong( columnIndex );
+                       // EDITED:    Long id = cursor.getLong( columnIndex );
+                        Integer id = cursor.getInt( columnIndex );
                         columnIndex = cursor.getColumnIndex( QuizDBHelper.QUIZ_QUESTIONS_COLUMN_STATE );
                         String state = cursor.getString( columnIndex );
                         columnIndex = cursor.getColumnIndex( QuizDBHelper.QUIZ_QUESTIONS_COLUMN_CAPITAL_CITY );
@@ -80,7 +81,8 @@ public class QuizQuestionsData {
                         String secondCity = cursor.getString( columnIndex );
 
                         // create a new JobLead object and set its state to the retrieved values
-                        QuizQuestions quizQuestions = new QuizQuestions( state, capitalCity, firstCity, secondCity );
+                        //EDITED:       QuizQuestions quizQuestions = new QuizQuestions(state, capitalCity, firstCity, secondCity );
+                        QuizQuestions quizQuestions = new QuizQuestions(id, state, capitalCity, firstCity, secondCity );
                         quizQuestions.setId(id); // set the id (the primary key) of this object
                         // add it to the list
                         quizQuestionsList.add( quizQuestions );

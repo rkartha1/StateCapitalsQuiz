@@ -17,8 +17,8 @@ public class QuizQuestions {
         this.secondCity = null;
     }
 
-    public QuizQuestions( String state, String capitalCity, String firstCity, String secondCity ) {
-        this.id = -1;  // the primary key id will be set by a setter method
+    public QuizQuestions( Integer id, String state, String capitalCity, String firstCity, String secondCity ) {
+        this.id = id;  // the primary key id will be set by a setter method
         this.state = state;
         this.capitalCity = capitalCity;
         this.firstCity = firstCity;
