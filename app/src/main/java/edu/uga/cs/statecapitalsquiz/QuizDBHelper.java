@@ -25,6 +25,7 @@ public class QuizDBHelper extends SQLiteOpenHelper {
     public static final String QUIZZES_COLUMN_ANSWERED = "answered";
 
     public static final String TABLE_QUIZ_RESPONSES = "quiz_questions";
+    public static final String QUIZ_RESPONSES_COLUMN_ID = "_id";
     public static final String QUIZ_RESPONSES_COLUMN_QUIZ_ID = "quiz_id";
     public static final String QUIZ_RESPONSES_COLUMN_QUESTION_ID = "question_id";
     public static final String QUIZ_RESPONSES_COLUMN_USER_ANSWER = "user_answer";
@@ -47,6 +48,7 @@ public class QuizDBHelper extends SQLiteOpenHelper {
             + ")";
 
     private static final String CREATE_QUIZ_RESPONSES = "create table  " + TABLE_QUIZ_RESPONSES + " ("
+            + QUIZ_RESPONSES_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + QUIZ_RESPONSES_COLUMN_QUIZ_ID + " INTEGER, "
             + QUIZ_RESPONSES_COLUMN_QUESTION_ID + " INTEGER, "
             + QUIZ_RESPONSES_COLUMN_USER_ANSWER + " TEXT, "
