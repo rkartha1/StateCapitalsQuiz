@@ -81,7 +81,7 @@ public class QuizQuestionsData {
 
                         // create a new JobLead object and set its state to the retrieved values
                         QuizQuestions quizQuestions = new QuizQuestions( state, capitalCity, firstCity, secondCity );
-                        QuizQuestions.setId(id); // set the id (the primary key) of this object
+                        quizQuestions.setId(id); // set the id (the primary key) of this object
                         // add it to the list
                         quizQuestionsList.add( quizQuestions );
                         Log.d(DEBUG_TAG, "Retrieved JobLead: " + quizQuestions);
