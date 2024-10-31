@@ -7,16 +7,12 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager2.widget.ViewPager2;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 
 public class QuizFragment extends Fragment {
 
@@ -26,18 +22,17 @@ public class QuizFragment extends Fragment {
     private TextView questionText;
     private RadioGroup choicesRadioGroup;
     private RadioButton choice1, choice2, choice3;
+    public static int win = 0;
+
 
     private QuizQuestionsData quizQuestionsData;
-    private QuizResponsesData quizResponsesData;
-
-    private int correctAnswersCount = 0; // Track correct answers
 
     public QuizFragment() {
         // Required empty public constructor
     }
 
-    public static QuizFragment newInstance(int versionNum) {
-        QuizFragment fragment = new QuizFragment();
+    public static edu.uga.cs.statecapitalsquiz.QuizFragment newInstance(int versionNum) {
+        edu.uga.cs.statecapitalsquiz.QuizFragment fragment = new edu.uga.cs.statecapitalsquiz.QuizFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -48,8 +43,6 @@ public class QuizFragment extends Fragment {
         super.onCreate(savedInstanceState);
         quizQuestionsData = new QuizQuestionsData(getActivity());
         quizQuestionsData.open();
-        quizResponsesData = new QuizResponsesData(getActivity());
-        quizResponsesData.open();
     }
 
     @Override
@@ -63,55 +56,27 @@ public class QuizFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        questionText = view.findViewById(R.id.question_text);
-        choice1 = view.findViewById(R.id.choice1);
-        choice2 = view.findViewById(R.id.choice2);
-        choice3 = view.findViewById(R.id.choice3);
-        choicesRadioGroup = view.findViewById(R.id.choices_radio_group);
+        TextView titleView = view.findViewById(R.id.question_text);
+        RadioButton choice1 = view.findViewById(R.id.choice1);
+        RadioButton choice2 = view.findViewById(R.id.choice2);
+        RadioButton choice3 = view.findViewById(R.id.choice3);
 
         // Get all quiz questions
-        questions = quizQuestionsData.retrieveAllQuizQuestions();
+        List<QuizQuestions> quizQuestionsList = quizQuestionsData.retrieveAllQuizQuestions();
 
-        if (!questions.isEmpty()) {
-            displayNextQuestion();
-        } else {
-            // Handle case where there are no quiz questions
-            questionText.setText("No States Available");
-        }
+        if (!quizQuestionsList.isEmpty()) {
+            // Randomly select a question
+            Random random = new Random();
+            QuizQuestions randomQuestion = quizQuestionsList.get(random.nextInt(quizQuestionsList.size()));
 
-        // Detect swipe gestures
-        view.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
-            @Override
-            public void onSwipeLeft() {
-                checkAnswerAndMoveToNext();
-            }
+            // Set the title view to the selected state
+            titleView.setText(randomQuestion.getState());
 
-            @Override
-            public void onSwipeRight() {
-                checkAnswerAndMoveToNext();
-            }
-        });
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        quizQuestionsData.close(); // Close the database when fragment is destroyed
-        quizResponsesData.close();
-    }
-
-    private void displayNextQuestion() {
-        // Ensure we only display 6 questions
-        if (currentQuestionIndex < questions.size() && currentQuestionIndex < 6) {
-            currentQuestion = questions.get(currentQuestionIndex);
-            questionText.setText(currentQuestion.getState());
-
-            // Randomly assign city names to the choices
+            Random random2 = new Random();
             List<Integer> numberList = new ArrayList<>();
             numberList.add(1);
             numberList.add(2);
             numberList.add(3);
-            Random random = new Random();
 
             Integer randomNum = numberList.get(random.nextInt(numberList.size()));
             numberList.remove(randomNum);
@@ -119,79 +84,53 @@ public class QuizFragment extends Fragment {
             numberList.remove(randomNum2);
             Integer last = numberList.get(0);
 
-            // Set the text for the radio buttons based on random selection
             if (randomNum == 1) {
-                choice1.setText(currentQuestion.getFirstCity());
+                choice1.setText(randomQuestion.getFirstCity());
             } else if (randomNum == 2) {
-                choice2.setText(currentQuestion.getFirstCity());
+                choice2.setText(randomQuestion.getFirstCity());
             } else {
-                choice3.setText(currentQuestion.getFirstCity());
+                choice3.setText(randomQuestion.getFirstCity());
             }
 
             if (randomNum2 == 1) {
-                choice1.setText(currentQuestion.getSecondCity());
+                choice1.setText(randomQuestion.getSecondCity());
             } else if (randomNum2 == 2) {
-                choice2.setText(currentQuestion.getSecondCity());
+                choice2.setText(randomQuestion.getSecondCity());
             } else {
-                choice3.setText(currentQuestion.getSecondCity());
+                choice3.setText(randomQuestion.getSecondCity());
             }
 
             if (last == 1) {
-                choice1.setText(currentQuestion.getCapitalCity());
+                choice1.setText(randomQuestion.getCapitalCity());
+                if (choice1.isChecked()) {
+                    win = win + 1;
+                }
             } else if (last == 2) {
-                choice2.setText(currentQuestion.getCapitalCity());
+                choice2.setText(randomQuestion.getCapitalCity());
+                if (choice2.isChecked()) {
+                    win = win + 1;
+                }
             } else {
-                choice3.setText(currentQuestion.getCapitalCity());
+                choice3.setText(randomQuestion.getCapitalCity());
+                if (choice3.isChecked()) {
+                    win = win + 1;
+                }
             }
-
-            currentQuestionIndex++;
-        } else if (currentQuestionIndex == 6) {
-            // Show results on the 7th screen
-            showResults();
         }
     }
 
-    private void checkAnswerAndMoveToNext() {
-        int selectedId = choicesRadioGroup.getCheckedRadioButtonId();
-        if (selectedId == -1) {
-            // No answer selected, return
-            return;
-        }
-
-        RadioButton selectedRadioButton = getView().findViewById(selectedId);
-        String selectedAnswer = selectedRadioButton.getText().toString();
-
-        boolean isCorrect = selectedAnswer.equals(currentQuestion.getCapitalCity());
-
-        // Save the response
-        QuizResponses response = new QuizResponses(currentQuestion.getId(), currentQuestion.getId(), selectedAnswer);
-        quizResponsesData.storeQuizResponses(response);
-
-        if (isCorrect) {
-            correctAnswersCount++; // Increment if correct
-        }
-
-        // Move to the next question or show results if we've reached 6 questions
-        if (currentQuestionIndex < 6) {
-            displayNextQuestion(); // Move to the next question if we haven't answered 6
-        } else {
-            // Navigate to ResultsFragment
-            showResults();
-        }
+    public static int getWin() {
+        return win;
     }
 
-    private void showResults() {
-        AndroidVersionsPagerAdapter adapter = (AndroidVersionsPagerAdapter) ((MainActivity) getActivity()).getPagerAdapter();
-        adapter.setCorrectAnswersCount(correctAnswersCount);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.viewpager, new ResultsFragment()) // Replace with a new instance, if needed
-                .commit();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        quizQuestionsData.close(); // Close the database when fragment is destroyed
     }
 
-
-
-
-
-
-
+    public static int getNumberOfVersions() {
+        return 6;
+    }
 }
+

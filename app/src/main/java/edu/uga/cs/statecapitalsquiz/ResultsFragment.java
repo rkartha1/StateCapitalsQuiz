@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-
 import androidx.fragment.app.Fragment;
 
 public class ResultsFragment extends Fragment {
@@ -39,5 +38,4 @@ public class ResultsFragment extends Fragment {
             resultTextView.setText("You answered " + correctAnswers + " out of " + totalQuestions + " correct!");
         }
     }
-
 }
