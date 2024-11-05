@@ -7,6 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 public class ResultsFragment extends Fragment {
+
     private static final String ARG_CORRECT_ANSWERS = "correctAnswers";
     private static final String ARG_TOTAL_QUESTIONS = "totalQuestions";
     public static ResultsFragment newInstance(int correctAnswers, int totalQuestions) {
@@ -17,11 +18,15 @@ public class ResultsFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+    //int win = QuizFragment.getWin();
+    //int win = 3;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_results, container, false);
     }
+    int win = 4;
+
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -29,7 +34,7 @@ public class ResultsFragment extends Fragment {
         if (getArguments() != null) {
             int correctAnswers = getArguments().getInt(ARG_CORRECT_ANSWERS);
             int totalQuestions = getArguments().getInt(ARG_TOTAL_QUESTIONS);
-            resultTextView.setText("You answered " + correctAnswers + " out of " + totalQuestions + " correct!");
+            resultTextView.setText("You answered " + win + " out of " + totalQuestions + " correct!");
         }
     }
 }

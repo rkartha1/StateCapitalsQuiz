@@ -72,6 +72,8 @@ package edu.uga.cs.statecapitalsquiz;
 //
 //
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -86,8 +88,11 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager2 pager; // Declare the ViewPager2 variable
 
+    private static final String TAG = "MAIN";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "TESTTTTT");
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);

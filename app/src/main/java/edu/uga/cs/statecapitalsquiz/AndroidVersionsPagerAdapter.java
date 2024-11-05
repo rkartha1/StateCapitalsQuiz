@@ -1,29 +1,3 @@
-//package edu.uga.cs.statecapitalsquiz;
-//
-//import androidx.fragment.app.Fragment;
-//import androidx.fragment.app.FragmentManager;
-//import androidx.lifecycle.Lifecycle;
-//import androidx.viewpager2.adapter.FragmentStateAdapter;
-//
-//public class AndroidVersionsPagerAdapter extends FragmentStateAdapter {
-//    public AndroidVersionsPagerAdapter(
-//            FragmentManager fragmentManager,
-//            Lifecycle lifecycle ) {
-//        super( fragmentManager, lifecycle );
-//    }
-//
-//    @Override
-//    public Fragment createFragment(int position){
-//        return QuizFragment
-//                .newInstance( position );
-//    }
-//
-//    @Override
-//    public int getItemCount() {
-//        return 7;
-//    }
-//}
-
 package edu.uga.cs.statecapitalsquiz;
 
 import androidx.fragment.app.Fragment;
@@ -32,7 +6,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 public class AndroidVersionsPagerAdapter extends FragmentStateAdapter {
-    private int correctAnswersCount;
+    private int correctAnswersCount = 0;
 
     public AndroidVersionsPagerAdapter(FragmentManager fragmentManager, Lifecycle lifecycle) {
         super(fragmentManager, lifecycle);

@@ -82,6 +82,7 @@ public class QuizResponsesData {
                         // add it to the list
                         quizResponsesList.add( quizResponses );
                         Log.d(DEBUG_TAG, "Retrieved JobLead: " + quizResponses);
+
                     }
                 }
             }
