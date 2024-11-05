@@ -1,6 +1,7 @@
 package edu.uga.cs.statecapitalsquiz;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,6 @@ public class QuizFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_quiz, container, false);
     }
 
@@ -75,11 +74,9 @@ public class QuizFragment extends Fragment {
         if (!questions.isEmpty()) {
             displayNextQuestion();
         } else {
-            // Handle case where there are no quiz questions
             questionText.setText("No States Available");
         }
 
-        // Detect swipe gestures
         view.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
             @Override
             public void onSwipeLeft() {
@@ -96,7 +93,7 @@ public class QuizFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        quizQuestionsData.close(); // Close the database when fragment is destroyed
+        quizQuestionsData.close();
         quizResponsesData.close();
     }
 
@@ -113,11 +110,9 @@ public class QuizFragment extends Fragment {
             numberList.add(3);
             Random random = new Random();
 
-            Integer randomNum = numberList.get(random.nextInt(numberList.size()));
-            numberList.remove(randomNum);
-            Integer randomNum2 = numberList.get(random.nextInt(numberList.size()));
-            numberList.remove(randomNum2);
-            Integer last = numberList.get(0);
+            Integer randomNum = numberList.remove(random.nextInt(numberList.size()));
+            Integer randomNum2 = numberList.remove(random.nextInt(numberList.size()));
+            Integer last = numberList.get(0); // This will be the last remaining choice
 
             // Set the text for the radio buttons based on random selection
             if (randomNum == 1) {
@@ -155,13 +150,15 @@ public class QuizFragment extends Fragment {
         int selectedId = choicesRadioGroup.getCheckedRadioButtonId();
         if (selectedId == -1) {
             // No answer selected, return
+            Toast.makeText(getActivity(), "Please select an answer", Toast.LENGTH_SHORT).show();
             return;
         }
 
         RadioButton selectedRadioButton = getView().findViewById(selectedId);
         String selectedAnswer = selectedRadioButton.getText().toString();
 
-        boolean isCorrect = selectedAnswer.equals(currentQuestion.getCapitalCity());
+        // Check answer ignoring case
+        boolean isCorrect = selectedAnswer.equalsIgnoreCase(currentQuestion.getCapitalCity());
 
         // Save the response
         QuizResponses response = new QuizResponses(currentQuestion.getId(), currentQuestion.getId(), selectedAnswer);
@@ -169,29 +166,26 @@ public class QuizFragment extends Fragment {
 
         if (isCorrect) {
             correctAnswersCount++; // Increment if correct
+            Log.d("QuizFragment", "Correct Answers: " + correctAnswersCount);
+            Toast.makeText(getActivity(), "Correct! Total correct: " + correctAnswersCount, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "Incorrect! The correct answer was: " + currentQuestion.getCapitalCity(), Toast.LENGTH_SHORT).show();
         }
 
         // Move to the next question or show results if we've reached 6 questions
         if (currentQuestionIndex < 6) {
             displayNextQuestion(); // Move to the next question if we haven't answered 6
         } else {
-            // Navigate to ResultsFragment
             showResults();
         }
     }
 
     private void showResults() {
-        AndroidVersionsPagerAdapter adapter = (AndroidVersionsPagerAdapter) ((MainActivity) getActivity()).getPagerAdapter();
-        adapter.setCorrectAnswersCount(correctAnswersCount);
+        int totalQuestions = 6; // Total number of questions
+        ResultsFragment resultsFragment = ResultsFragment.newInstance(correctAnswersCount, totalQuestions);
+
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.viewpager, new ResultsFragment()) // Replace with a new instance, if needed
+                .replace(R.id.viewpager, resultsFragment)
                 .commit();
     }
-
-
-
-
-
-
-
 }
