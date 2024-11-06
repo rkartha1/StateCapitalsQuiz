@@ -23,6 +23,14 @@ public class OnSwipeTouchListener implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
+        if (userAnswer.equals(correctAnswer)) {
+            Log.d("OnSwipeTouchListener", "Correct answer.");
+            GameState.incrementWinCount();
+            winCount = GameState.getWinCount();
+        } else {
+            winCount = GameState.getWinCount();
+        }
+        Log.d("OnSwipeTouchListener", "WINNNNNN==" + winCount);
         Log.d("OnSwipeTouchListener", "Touch event received: " + motionEvent.getAction() +
                 " | X: " + motionEvent.getX() + ", Y: " + motionEvent.getY());
         boolean result = gestureDetector.onTouchEvent(motionEvent);

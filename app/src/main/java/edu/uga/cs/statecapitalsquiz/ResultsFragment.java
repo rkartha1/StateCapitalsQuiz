@@ -18,14 +18,13 @@ public class ResultsFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-    //int win = QuizFragment.getWin();
+    int win = GameState.getWinCount();
     //int win = 3;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_results, container, false);
     }
-    int win = 4;
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {

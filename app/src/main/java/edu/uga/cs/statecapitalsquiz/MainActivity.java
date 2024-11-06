@@ -94,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
     public void setWins(int wins){
         wins = wins+1;
     }
+    public int getWins () {
+        return wins;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

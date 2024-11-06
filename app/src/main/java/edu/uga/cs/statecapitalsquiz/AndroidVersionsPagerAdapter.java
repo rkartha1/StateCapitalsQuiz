@@ -6,7 +6,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 public class AndroidVersionsPagerAdapter extends FragmentStateAdapter {
-    private int correctAnswersCount = 0;
+    private int correctAnswersCount = GameState.getWinCount();
 
     public AndroidVersionsPagerAdapter(FragmentManager fragmentManager, Lifecycle lifecycle) {
         super(fragmentManager, lifecycle);
@@ -16,12 +16,18 @@ public class AndroidVersionsPagerAdapter extends FragmentStateAdapter {
         this.correctAnswersCount = correctAnswersCount;
     }
 
+    public int getCorrectAnswersCount() {
+        return correctAnswersCount;
+    }
+
     @Override
     public Fragment createFragment(int position) {
         if (position < 6) {
+            // Passing the current correctAnswersCount to QuizFragment
             return QuizFragment.newInstance(position);
         } else {
-            return ResultsFragment.newInstance(correctAnswersCount, 6); // Pass the correct answers
+            // Passing the final correctAnswersCount to ResultsFragment
+            return ResultsFragment.newInstance(correctAnswersCount, 6); // 6 is the number of questions
         }
     }
 
