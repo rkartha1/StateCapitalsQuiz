@@ -5,6 +5,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class AndroidVersionsPagerAdapter extends FragmentStateAdapter {
     private int correctAnswersCount = GameState.getWinCount();
 
@@ -27,7 +31,8 @@ public class AndroidVersionsPagerAdapter extends FragmentStateAdapter {
             return QuizFragment.newInstance(position);
         } else {
             // Passing the final correctAnswersCount to ResultsFragment
-            return ResultsFragment.newInstance(correctAnswersCount, 6); // 6 is the number of questions
+            String finishTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+            return ResultsFragment.newInstance(correctAnswersCount, 6, finishTime); // 6 is the number of questions
         }
     }
 

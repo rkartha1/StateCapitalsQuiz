@@ -10,11 +10,13 @@ public class ResultsFragment extends Fragment {
 
     private static final String ARG_CORRECT_ANSWERS = "correctAnswers";
     private static final String ARG_TOTAL_QUESTIONS = "totalQuestions";
-    public static ResultsFragment newInstance(int correctAnswers, int totalQuestions) {
+    private static final String ARG_FINISH_TIME = "finishTime";
+    public static ResultsFragment newInstance(int correctAnswers, int totalQuestions, String finishTime) {
         ResultsFragment fragment = new ResultsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_CORRECT_ANSWERS, correctAnswers);
         args.putInt(ARG_TOTAL_QUESTIONS, totalQuestions);
+        args.putString(ARG_FINISH_TIME, finishTime);
         fragment.setArguments(args);
         return fragment;
     }
@@ -30,10 +32,13 @@ public class ResultsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         TextView resultTextView = view.findViewById(R.id.result_text);
+        TextView timeTextView = view.findViewById(R.id.time_text);
         if (getArguments() != null) {
             int correctAnswers = getArguments().getInt(ARG_CORRECT_ANSWERS);
             int totalQuestions = getArguments().getInt(ARG_TOTAL_QUESTIONS);
+            String finishTime = getArguments().getString(ARG_FINISH_TIME);
             resultTextView.setText("You answered " + win + " out of " + totalQuestions + " correct!");
+            timeTextView.setText("Quiz finished at: " + finishTime);
         }
     }
 }

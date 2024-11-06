@@ -224,8 +224,6 @@ public class QuizFragment extends Fragment {
     }
 
 
-
-
     public static int getNumberOfVersions() {
         return 6;
     }
