@@ -88,7 +88,12 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager2 pager; // Declare the ViewPager2 variable
 
+    public int wins = 0;
     private static final String TAG = "MAIN";
+
+    public void setWins(int wins){
+        wins = wins+1;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
