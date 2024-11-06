@@ -17,6 +17,7 @@ public class QuizDBHelper extends SQLiteOpenHelper {
     public static final String QUIZ_QUESTIONS_COLUMN_CAPITAL_CITY = "capital_city";
     public static final String QUIZ_QUESTIONS_COLUMN_FIRST_CITY = "first_city";
     public static final String QUIZ_QUESTIONS_COLUMN_SECOND_CITY = "second_city";
+    public static final String QUIZ_QUESTIONS_COLUMN_USED = "used";
 
     public static final String TABLE_QUIZZES = "quizzes";
     public static final String QUIZZES_COLUMN_ID = "_id";
@@ -37,7 +38,8 @@ public class QuizDBHelper extends SQLiteOpenHelper {
             + QUIZ_QUESTIONS_COLUMN_STATE + " TEXT, "
             + QUIZ_QUESTIONS_COLUMN_CAPITAL_CITY + " TEXT, "
             + QUIZ_QUESTIONS_COLUMN_FIRST_CITY + " TEXT, "
-            + QUIZ_QUESTIONS_COLUMN_SECOND_CITY + " TEXT "
+            + QUIZ_QUESTIONS_COLUMN_SECOND_CITY + " TEXT, "
+            + QUIZ_QUESTIONS_COLUMN_USED + " INTEGER DEFAULT 0"
             + ")";
 
     private static final String CREATE_QUIZZES = "create table " + TABLE_QUIZZES + " ("
@@ -78,7 +80,10 @@ public class QuizDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("drop table if exists " + TABLE_QUIZ_QUESTIONS);
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE " + TABLE_QUIZ_QUESTIONS + " ADD COLUMN " + QUIZ_QUESTIONS_COLUMN_USED + " INTEGER DEFAULT 0");
+        }
+
         db.execSQL("drop table if exists " + TABLE_QUIZZES);
         db.execSQL("drop table if exists " + TABLE_QUIZ_RESPONSES);
         onCreate(db);

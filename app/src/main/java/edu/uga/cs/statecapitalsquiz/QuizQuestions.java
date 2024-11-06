@@ -7,6 +7,7 @@ public class QuizQuestions {
     private String capitalCity;
     private String firstCity;
     private String secondCity;
+    public int used;
 
     public QuizQuestions()
     {
@@ -15,14 +16,16 @@ public class QuizQuestions {
         this.capitalCity = null;
         this.firstCity = null;
         this.secondCity = null;
+        this.used = 0;
     }
 
-    public QuizQuestions( Integer id, String state, String capitalCity, String firstCity, String secondCity ) {
+    public QuizQuestions( Integer id, String state, String capitalCity, String firstCity, String secondCity, int used ) {
         this.id = id;  // the primary key id will be set by a setter method
         this.state = state;
         this.capitalCity = capitalCity;
         this.firstCity = firstCity;
         this.secondCity = secondCity;
+        this.used = used;
     }
 
     public long getId()
@@ -75,9 +78,13 @@ public class QuizQuestions {
         this.secondCity = secondCity;
     }
 
+    public int getUsed() { return used; }
+
+    public void setUsed(int used) { this.used = used; }
+
     public String toString()
     {
-        return id + ": " + state + " " + capitalCity + " " + firstCity + " " + secondCity;
+        return id + ": " + state + " " + capitalCity + " " + firstCity + " " + secondCity + " " + used;
     }
 }
 

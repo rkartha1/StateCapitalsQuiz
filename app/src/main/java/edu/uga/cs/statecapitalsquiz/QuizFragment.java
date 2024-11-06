@@ -106,7 +106,12 @@ public class QuizFragment extends Fragment {
         if (!quizQuestionsList.isEmpty()) {
             // Randomly select a question
             Random random = new Random();
-            currentQuestion = quizQuestionsList.get(random.nextInt(quizQuestionsList.size()));
+            do {
+                currentQuestion = quizQuestionsList.get(random.nextInt(quizQuestionsList.size()));
+            } while (currentQuestion.getUsed() == 1);
+
+            currentQuestion.setUsed(1);
+            quizQuestionsData.updateQuizQuestion(currentQuestion);
 
 
 

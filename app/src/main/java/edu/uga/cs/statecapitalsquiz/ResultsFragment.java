@@ -1,4 +1,6 @@
 package edu.uga.cs.statecapitalsquiz;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +40,12 @@ public class ResultsFragment extends Fragment {
             int totalQuestions = getArguments().getInt(ARG_TOTAL_QUESTIONS);
             String finishTime = getArguments().getString(ARG_FINISH_TIME);
             resultTextView.setText("You answered " + win + " out of " + totalQuestions + " correct!");
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("quiz_scores", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            String pastResults = sharedPreferences.getString("scores", "");
+            pastResults += correctAnswers + " out of " + totalQuestions + " correct on " + finishTime + "\n";
+            editor.putString("scores", pastResults);
+            editor.apply();
             timeTextView.setText("Quiz finished at: " + finishTime);
         }
     }

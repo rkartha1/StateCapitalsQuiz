@@ -28,10 +28,16 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         Button continueButton = findViewById(R.id.continue_button);
+        Button viewPastResultsButton = findViewById(R.id.continue_button2);
         continueButton.setOnClickListener(v -> {
             // Start MainActivity when the continue button is clicked
             Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
             startActivity(mainIntent);
+            finish();
+        });
+        viewPastResultsButton.setOnClickListener(v -> {
+            Intent pastResultsIntent = new Intent(SplashActivity.this, PastResultsActivity.class);
+            startActivity(pastResultsIntent);
             finish();
         });
     }
