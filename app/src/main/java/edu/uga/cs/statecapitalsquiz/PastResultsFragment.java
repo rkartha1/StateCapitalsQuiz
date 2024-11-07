@@ -1,7 +1,5 @@
 package edu.uga.cs.statecapitalsquiz;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +10,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import java.util.List;
 
-public class PastResultsFragment extends Fragment{
+public class PastResultsFragment extends Fragment {
 
-    private List<String> previousScores;
+    private QuizzesData quizzesData;
+    private TextView scoresTextView;
 
     public PastResultsFragment() {
-        //default empty constructor
+        // Default empty constructor
     }
 
     @Nullable
@@ -25,21 +24,32 @@ public class PastResultsFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_past_results, container, false);
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView scoresTextView = view.findViewById(R.id.scores_text_view);
+        scoresTextView = view.findViewById(R.id.scores_text_view);
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("quiz_scores", Context.MODE_PRIVATE);
-        String scores = sharedPreferences.getString("scores", "No previous scores available.");
-        scoresTextView.setText(scores);
+        // Initialize QuizzesData to retrieve stored results
+        quizzesData = new QuizzesData(requireContext());
+        quizzesData.open();
 
-        // Display scores. Here we're simply joining them into a single string, but use a RecyclerView for more complex displays.
-        if (previousScores != null && !previousScores.isEmpty()) {
+        // Retrieve quiz results and display them
+        displayQuizResults();
+
+        quizzesData.close();
+    }
+
+    private void displayQuizResults() {
+        List<Quizzes> previousQuizzes = quizzesData.retrieveAllQuizzes();
+
+        if (previousQuizzes != null && !previousQuizzes.isEmpty()) {
             StringBuilder scoresText = new StringBuilder("Past Scores:\n");
-            for (String score : previousScores) {
-                scoresText.append(score).append("\n");
+            for (Quizzes quiz : previousQuizzes) {
+                scoresText.append("Date: ").append(quiz.getDate())
+                        .append(", Result: ").append(quiz.getResult())
+                        .append("/").append(quiz.getAnswered()).append("\n");
             }
             scoresTextView.setText(scoresText.toString());
         } else {
@@ -47,4 +57,5 @@ public class PastResultsFragment extends Fragment{
         }
     }
 }
+
 

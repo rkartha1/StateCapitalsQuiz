@@ -71,6 +71,7 @@ package edu.uga.cs.statecapitalsquiz;
 //
 //
 //
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -80,6 +81,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
+import android.content.Intent;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import edu.uga.cs.statecapitalsquiz.AndroidVersionsPagerAdapter;
 import edu.uga.cs.statecapitalsquiz.LoadDataAsyncTask;
@@ -118,9 +122,24 @@ public class MainActivity extends AppCompatActivity {
 
         // Set up the ViewPager2 with the adapter
         AndroidVersionsPagerAdapter avpAdapter = new AndroidVersionsPagerAdapter(
-                getSupportFragmentManager(), getLifecycle());
+                getSupportFragmentManager(), getLifecycle(), getApplicationContext());
         pager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
         pager.setAdapter(avpAdapter);
+    }
+
+
+
+    @Override
+    public void onBackPressed() {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
+        if (currentFragment instanceof ResultsFragment) {
+            Intent intent = new Intent(MainActivity.this, SplashActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     public AndroidVersionsPagerAdapter getPagerAdapter() {
