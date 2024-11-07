@@ -1,14 +1,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/blue"
     android:orientation="vertical"
     android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:text="Previous Results"
+        android:textAlignment="center"
+        android:textColor="#FF0000"
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/scores_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:text="Past Results will be displayed here" />
+        android:layout_marginTop="4dp"
+        android:text="Past Results will be displayed here"
+        android:textAlignment="center"
+        android:textSize="20sp" />
 
 </LinearLayout>

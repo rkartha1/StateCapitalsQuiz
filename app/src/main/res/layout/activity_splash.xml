@@ -2,7 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E4D8FA"
+    android:layout_gravity="center"
+    android:background="@drawable/red"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="16dp">
@@ -13,11 +14,24 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="50dp"
         android:layout_marginRight="10dp"
         android:text="Welcome to the State Capital Quiz!"
+        android:textAlignment="center"
         android:textColor="@android:color/black"
-        android:textSize="24sp" />
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Click the 'Start Quiz' button to begin the quiz where you will be given 6 different questions to test you on how well you know the U.S. state capitals. To view how you performed on previous quizzes, click the 'View Past Results' button."
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="15sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/continue_button"
@@ -25,23 +39,27 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:text="Start Quiz" />
+        android:backgroundTint="#FFFFFF"
+        android:text="Start Quiz"
+        android:textColor="#FF0000" />
 
     <Button
         android:id="@+id/continue_button2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text="View Past Results" />
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#FFFFFF"
+        android:text="View Past Results"
+        android:textColor="#0353F4" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/continue_button"
-        android:layout_marginBottom="20dp"
-        app:srcCompat="@drawable/map" />
+        android:layout_marginBottom="50dp"
+        app:srcCompat="@drawable/map2" />
 
 
 </LinearLayout>
