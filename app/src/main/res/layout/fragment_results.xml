@@ -38,13 +38,6 @@
             android:text="TESTING AGAIN"
             android:textColor="@color/white"
             android:textSize="24sp" />
-
-        <Button
-            android:id="@+id/return_to_splash_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Return to Splash Screen" />
-
     </LinearLayout>
 
 </LinearLayout>

@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Set up the ViewPager2 with the adapter
         AndroidVersionsPagerAdapter avpAdapter = new AndroidVersionsPagerAdapter(
-                getSupportFragmentManager(), getLifecycle());
+                getSupportFragmentManager(), getLifecycle(), getApplicationContext());
         pager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
         pager.setAdapter(avpAdapter);
     }
