@@ -1,77 +1,5 @@
 package edu.uga.cs.statecapitalsquiz;
-//
-//import android.database.Cursor;
-//import android.database.sqlite.SQLiteDatabase;
-//import android.os.Bundle;
-//import android.util.Log;
-//import android.widget.TextView;
-//
-//import androidx.viewpager2.adapter.FragmentStateAdapter;
-//import androidx.activity.EdgeToEdge;
-//import androidx.appcompat.app.AppCompatActivity;
-//import androidx.core.graphics.Insets;
-//import androidx.core.view.ViewCompat;
-//import androidx.core.view.WindowInsetsCompat;
-//import androidx.viewpager2.widget.ViewPager2;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//public class MainActivity extends AppCompatActivity {
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        EdgeToEdge.enable(this);
-//        setContentView(R.layout.activity_main);
-//        new LoadDataAsyncTask(this).execute();
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-//            return insets;
-//        });
-//        ViewPager2 pager = findViewById( R.id.viewpager );
-//        AndroidVersionsPagerAdapter avpAdapter = new
-//                AndroidVersionsPagerAdapter(
-//                getSupportFragmentManager(), getLifecycle() );
-//        pager.setOrientation(
-//                ViewPager2.ORIENTATION_HORIZONTAL );
-//        pager.setAdapter( avpAdapter );
-//    }
-//
-//    public List<QuizQuestions> getQuizQuestions() {
-//        List<QuizQuestions> questions = new ArrayList<>();
-//        QuizDBHelper dbHelper = QuizDBHelper.getInstance(this);
-//        SQLiteDatabase db = dbHelper.getReadableDatabase();
-//
-//        String[] columns = {
-//                QuizDBHelper.QUIZ_QUESTIONS_COLUMN_ID,
-//                QuizDBHelper.QUIZ_QUESTIONS_COLUMN_STATE,
-//                QuizDBHelper.QUIZ_QUESTIONS_COLUMN_CAPITAL_CITY,
-//                QuizDBHelper.QUIZ_QUESTIONS_COLUMN_FIRST_CITY,
-//                QuizDBHelper.QUIZ_QUESTIONS_COLUMN_SECOND_CITY
-//        };
-//
-//        Cursor cursor = db.query(QuizDBHelper.TABLE_QUIZ_QUESTIONS, columns, null, null, null, null, null);
-//
-//        while (cursor.moveToNext()) {
-//            int id = cursor.getInt(cursor.getColumnIndexOrThrow(QuizDBHelper.QUIZ_QUESTIONS_COLUMN_ID));
-//            String state = cursor.getString(cursor.getColumnIndexOrThrow(QuizDBHelper.QUIZ_QUESTIONS_COLUMN_STATE));
-//            String capitalCity = cursor.getString(cursor.getColumnIndexOrThrow(QuizDBHelper.QUIZ_QUESTIONS_COLUMN_CAPITAL_CITY));
-//            String firstCity = cursor.getString(cursor.getColumnIndexOrThrow(QuizDBHelper.QUIZ_QUESTIONS_COLUMN_FIRST_CITY));
-//            String secondCity = cursor.getString(cursor.getColumnIndexOrThrow(QuizDBHelper.QUIZ_QUESTIONS_COLUMN_SECOND_CITY));
-//
-//            questions.add(new QuizQuestions(id, state, capitalCity, firstCity, secondCity));
-//        }
-//        cursor.close();
-//        db.close();
-//        return questions;
-//    }
-//
-//
-//
-//
-import android.content.Context;
+
 import android.os.Bundle;
 import android.util.Log;
 
@@ -83,33 +11,52 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 import android.content.Intent;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
-import edu.uga.cs.statecapitalsquiz.AndroidVersionsPagerAdapter;
-import edu.uga.cs.statecapitalsquiz.LoadDataAsyncTask;
-
+/**
+ * {@link MainActivity} is the main activity of the State Capitals Quiz app.
+ * It initializes and manages the user interface, sets up the ViewPager2 for fragment navigation,
+ * and handles the back button press behavior to navigate between fragments.
+ */
 public class MainActivity extends AppCompatActivity {
 
-    private ViewPager2 pager; // Declare the ViewPager2 variable
+    private ViewPager2 pager;
 
-    public int wins = 0;
+    private int wins = 0;
     private static final String TAG = "MAIN";
 
+    /**
+     * Sets the number of wins by incrementing the current wins count.
+     *
+     * @param wins The number of wins to set.
+     */
     public void setWins(int wins){
-        wins = wins+1;
+        this.wins = wins + 1;
     }
+
+    /**
+     * Gets the current number of wins.
+     *
+     * @return The current number of wins.
+     */
     public int getWins () {
         return wins;
     }
 
+    /**
+     * Called when the activity is first created. Sets up the user interface, initializes the
+     * ViewPager2, and starts the asynchronous task to load quiz data from a CSV file.
+     *
+     * @param savedInstanceState A bundle containing the activity's previously saved state, if any.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "TESTTTTT");
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        // Initialize the pager variable
+
         pager = findViewById(R.id.viewpager);
 
         new LoadDataAsyncTask(this).execute();
@@ -120,15 +67,16 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Set up the ViewPager2 with the adapter
         AndroidVersionsPagerAdapter avpAdapter = new AndroidVersionsPagerAdapter(
                 getSupportFragmentManager(), getLifecycle(), getApplicationContext());
         pager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
         pager.setAdapter(avpAdapter);
     }
 
-
-
+    /**
+     * Handles the back button press. If the current fragment is {@link ResultsFragment},
+     * it starts a new {@link SplashActivity}. Otherwise, it behaves as a normal back press.
+     */
     @Override
     public void onBackPressed() {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
@@ -142,12 +90,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Retrieves the current {@link AndroidVersionsPagerAdapter} associated with the ViewPager2.
+     *
+     * @return The current {@link AndroidVersionsPagerAdapter}.
+     */
     public AndroidVersionsPagerAdapter getPagerAdapter() {
-        return (AndroidVersionsPagerAdapter) pager.getAdapter(); // Now 'pager' is defined
+        return (AndroidVersionsPagerAdapter) pager.getAdapter(); // Return the pager adapter
     }
 }
 
-//
-//
-//
-//}

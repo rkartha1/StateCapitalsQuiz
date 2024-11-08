@@ -10,12 +10,20 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The {@code QuizResponsesData} class is responsible for interacting with the database
+ * to store, retrieve, and manage quiz responses. It provides methods for opening
+ * and closing the database, checking if the database is open, retrieving all quiz responses,
+ * and storing new quiz responses.
+ * The data is persisted in an SQLite database using {@link SQLiteDatabase} and
+ * {@link SQLiteOpenHelper} to manage the database schema.
+ */
 public class QuizResponsesData {
     public static final String DEBUG_TAG = "QuizResponsesData";
 
-    // this is a reference to our database; it is used later to run SQL commands
     private SQLiteDatabase db;
     private SQLiteOpenHelper quizResponsesDbHelper;
+
     private static final String[] allColumns = {
             QuizDBHelper.QUIZ_RESPONSES_COLUMN_ID,
             QuizDBHelper.QUIZ_RESPONSES_COLUMN_QUIZ_ID,
@@ -23,110 +31,119 @@ public class QuizResponsesData {
             QuizDBHelper.QUIZ_RESPONSES_COLUMN_USER_ANSWER
     };
 
-    public QuizResponsesData( Context context ) {
-        this.quizResponsesDbHelper = QuizDBHelper.getInstance( context );
+    /**
+     * Constructs a {@code QuizResponsesData} object with a given context,
+     * initializing the database helper for accessing the database.
+     *
+     * @param context the context used to access the database.
+     */
+    public QuizResponsesData(Context context) {
+        this.quizResponsesDbHelper = QuizDBHelper.getInstance(context);
     }
 
-    // Open the database
+    /**
+     * Opens a writable database connection to enable reading and writing.
+     * This method should be called before any database operations.
+     */
     public void open() {
         db = quizResponsesDbHelper.getWritableDatabase();
-        Log.d( DEBUG_TAG, "QuizResponsesData: db open" );
+        Log.d(DEBUG_TAG, "QuizResponsesData: db open");
     }
 
-    // Close the database
+    /**
+     * Closes the database connection and releases the resources.
+     * This should be called when the database is no longer needed.
+     */
     public void close() {
-        if( quizResponsesDbHelper != null ) {
+        if (quizResponsesDbHelper != null) {
             quizResponsesDbHelper.close();
             Log.d(DEBUG_TAG, "quizResponsesData: db closed");
         }
     }
 
-    public boolean isDBOpen()
-    {
+    /**
+     * Checks whether the database connection is currently open.
+     *
+     * @return {@code true} if the database is open, {@code false} otherwise.
+     */
+    public boolean isDBOpen() {
         return db.isOpen();
     }
 
-    // Retrieve all job leads and return them as a List.
-    // This is how we restore persistent objects stored as rows in the job leads table in the database.
-    // For each retrieved row, we create a new JobLead (Java POJO object) instance and add it to the list.
+    /**
+     * Retrieves all quiz responses from the database and returns them as a list of
+     * {@link QuizResponses} objects. Each row in the database corresponds to a quiz response.
+     *
+     * @return a list of all {@code QuizResponses} objects from the database.
+     */
     public List<QuizResponses> retrieveAllQuizResponses() {
         ArrayList<QuizResponses> quizResponsesList = new ArrayList<>();
         Cursor cursor = null;
         int columnIndex;
 
         try {
-            // Execute the select query and get the Cursor to iterate over the retrieved rows
-            cursor = db.query( QuizDBHelper.TABLE_QUIZ_RESPONSES, allColumns,
-                    null, null, null, null, null );
+            cursor = db.query(QuizDBHelper.TABLE_QUIZ_RESPONSES, allColumns,
+                    null, null, null, null, null);
 
-            // collect all job leads into a List
-            if( cursor != null && cursor.getCount() > 0 ) {
+            if (cursor != null && cursor.getCount() > 0) {
 
-                while( cursor.moveToNext() ) {
+                while (cursor.moveToNext()) {
 
-                    if( cursor.getColumnCount() >= 5) {
+                    if (cursor.getColumnCount() >= 5) {
+                        columnIndex = cursor.getColumnIndex(QuizDBHelper.QUIZ_RESPONSES_COLUMN_ID);
+                        long id = cursor.getLong(columnIndex);
+                        columnIndex = cursor.getColumnIndex(QuizDBHelper.QUIZ_RESPONSES_COLUMN_QUIZ_ID);
+                        int quizID = cursor.getInt(columnIndex);
+                        columnIndex = cursor.getColumnIndex(QuizDBHelper.QUIZ_RESPONSES_COLUMN_QUESTION_ID);
+                        int questionID = cursor.getInt(columnIndex);
+                        columnIndex = cursor.getColumnIndex(QuizDBHelper.QUIZ_RESPONSES_COLUMN_USER_ANSWER);
+                        String userAnswer = cursor.getString(columnIndex);
 
-                        // get all attribute values of this job lead
-                        columnIndex = cursor.getColumnIndex( QuizDBHelper.QUIZ_RESPONSES_COLUMN_ID);
-                        long id = cursor.getLong( columnIndex );
-                        columnIndex = cursor.getColumnIndex( QuizDBHelper.QUIZ_RESPONSES_COLUMN_QUIZ_ID );
-                        int quizID = cursor.getInt( columnIndex );
-                        columnIndex = cursor.getColumnIndex( QuizDBHelper.QUIZ_RESPONSES_COLUMN_QUESTION_ID );
-                        int questionID = cursor.getInt( columnIndex );
-                        columnIndex = cursor.getColumnIndex( QuizDBHelper.QUIZ_RESPONSES_COLUMN_USER_ANSWER );
-                        String userAnswer = cursor.getString( columnIndex );
+                        QuizResponses quizResponses = new QuizResponses(quizID, questionID, userAnswer);
+                        quizResponses.setId(id);
 
-                        // create a new JobLead object and set its state to the retrieved values
-                        QuizResponses quizResponses = new QuizResponses( quizID, questionID, userAnswer );
-                        quizResponses.setId(id); // set the id (the primary key) of this object
-                        // add it to the list
-                        quizResponsesList.add( quizResponses );
-                        Log.d(DEBUG_TAG, "Retrieved JobLead: " + quizResponses);
-
+                        quizResponsesList.add(quizResponses);
+                        Log.d(DEBUG_TAG, "Retrieved QuizResponse: " + quizResponses);
                     }
                 }
             }
-            if( cursor != null )
-                Log.d( DEBUG_TAG, "Number of records from DB: " + cursor.getCount() );
-            else
-                Log.d( DEBUG_TAG, "Number of records from DB: 0" );
-        }
-        catch( Exception e ){
-            Log.d( DEBUG_TAG, "Exception caught: " + e );
-        }
-        finally{
-            // we should close the cursor
+
+            if (cursor != null) {
+                Log.d(DEBUG_TAG, "Number of records from DB: " + cursor.getCount());
+            } else {
+                Log.d(DEBUG_TAG, "Number of records from DB: 0");
+            }
+        } catch (Exception e) {
+            Log.d(DEBUG_TAG, "Exception caught: " + e);
+        } finally {
             if (cursor != null) {
                 cursor.close();
             }
         }
-        // return a list of retrieved job leads
+
         return quizResponsesList;
     }
 
-    // Store a new job lead in the database.
-    public QuizResponses storeQuizResponses( QuizResponses quizResponses ) {
-
-        // Prepare the values for all of the necessary columns in the table
-        // and set their values to the variables of the JobLead argument.
-        // This is how we are providing persistence to a JobLead (Java object) instance
-        // by storing it as a new row in the database table representing job leads.
+    /**
+     * Stores a new {@link QuizResponses} object in the database. The object's
+     * attributes are persisted as a new row in the quiz responses table.
+     *
+     * @param quizResponses the {@code QuizResponses} object to be stored.
+     * @return the {@code QuizResponses} object with the generated database ID set.
+     */
+    public QuizResponses storeQuizResponses(QuizResponses quizResponses) {
         ContentValues values = new ContentValues();
-        values.put( QuizDBHelper.QUIZ_RESPONSES_COLUMN_QUIZ_ID, quizResponses.getQuizID());
-        values.put( QuizDBHelper.QUIZ_RESPONSES_COLUMN_QUESTION_ID, quizResponses.getQuizQuestionID() );
-        values.put( QuizDBHelper.QUIZ_RESPONSES_COLUMN_USER_ANSWER, quizResponses.getUserAnswer() );
+        values.put(QuizDBHelper.QUIZ_RESPONSES_COLUMN_QUIZ_ID, quizResponses.getQuizID());
+        values.put(QuizDBHelper.QUIZ_RESPONSES_COLUMN_QUESTION_ID, quizResponses.getQuizQuestionID());
+        values.put(QuizDBHelper.QUIZ_RESPONSES_COLUMN_USER_ANSWER, quizResponses.getUserAnswer());
 
-        // Insert the new row into the database table;
-        // The id (primary key) is automatically generated by the database system
-        // and returned as from the insert method call.
-        long id = db.insert( QuizDBHelper.TABLE_QUIZ_RESPONSES, null, values );
+        long id = db.insert(QuizDBHelper.TABLE_QUIZ_RESPONSES, null, values);
 
-        // store the id (the primary key) in the JobLead instance, as it is now persistent
-        quizResponses.setId( id );
+        quizResponses.setId(id);
 
-        Log.d( DEBUG_TAG, "Stored new quiz question with id: " + String.valueOf( quizResponses.getId() ) );
+        Log.d(DEBUG_TAG, "Stored new quiz response with id: " + String.valueOf(quizResponses.getId()));
 
         return quizResponses;
     }
-
 }
+

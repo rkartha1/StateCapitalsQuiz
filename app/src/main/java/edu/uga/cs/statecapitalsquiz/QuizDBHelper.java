@@ -5,6 +5,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * A {@link SQLiteOpenHelper} class for managing the quiz database. This class handles database creation,
+ * upgrading, and provides singleton access to the database.
+ */
 public class QuizDBHelper extends SQLiteOpenHelper {
 
     private static final String DEBUG_TAG = "QuizDBHelper";
@@ -33,6 +37,7 @@ public class QuizDBHelper extends SQLiteOpenHelper {
 
     private static QuizDBHelper helperInstance;
 
+    // SQL queries to create tables
     private static final String CREATE_QUIZ_QUESTIONS = "create table " + TABLE_QUIZ_QUESTIONS + " ("
             + QUIZ_QUESTIONS_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + QUIZ_QUESTIONS_COLUMN_STATE + " TEXT, "
@@ -57,10 +62,21 @@ public class QuizDBHelper extends SQLiteOpenHelper {
             + "FOREIGN KEY(" + QUIZ_RESPONSES_COLUMN_QUIZ_ID + ") REFERENCES " + TABLE_QUIZZES + "(" + QUIZZES_COLUMN_ID + "), "
             + "FOREIGN KEY(" + QUIZ_RESPONSES_COLUMN_QUESTION_ID + ") REFERENCES " + TABLE_QUIZ_QUESTIONS + "(" + QUIZ_QUESTIONS_COLUMN_ID + "))";
 
+    /**
+     * Private constructor to prevent instantiation from outside the class.
+     *
+     * @param context The context to be used for the database.
+     */
     private QuizDBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
+    /**
+     * Returns a singleton instance of the QuizDBHelper.
+     *
+     * @param context The context used to get the application context.
+     * @return The singleton instance of QuizDBHelper.
+     */
     public static synchronized QuizDBHelper getInstance(Context context) {
         if (helperInstance == null) {
             helperInstance = new QuizDBHelper(context.getApplicationContext());
@@ -68,6 +84,11 @@ public class QuizDBHelper extends SQLiteOpenHelper {
         return helperInstance;
     }
 
+    /**
+     * Called when the database is created. Creates the tables for quiz questions, quizzes, and quiz responses.
+     *
+     * @param db The SQLite database to be created.
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_QUIZ_QUESTIONS);
@@ -78,6 +99,13 @@ public class QuizDBHelper extends SQLiteOpenHelper {
         Log.d(DEBUG_TAG, "Table " + TABLE_QUIZ_RESPONSES + " created");
     }
 
+    /**
+     * Called when the database version is upgraded. This method handles schema changes between versions.
+     *
+     * @param db             The SQLite database being upgraded.
+     * @param oldVersion     The previous database version.
+     * @param newVersion     The new database version.
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 2) {

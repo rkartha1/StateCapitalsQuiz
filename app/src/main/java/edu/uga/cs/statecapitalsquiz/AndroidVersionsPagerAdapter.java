@@ -11,42 +11,68 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * A {@link FragmentStateAdapter} that provides fragments for a quiz application.
+ * It dynamically loads quiz fragments for the first 6 pages, followed by a results fragment
+ * showing the score and finish time for the quiz.
+ */
 public class AndroidVersionsPagerAdapter extends FragmentStateAdapter {
-    private int correctAnswersCount = GameState.getWinCount();
-    private QuizzesData quizzesData;
 
+    // The count of correct answers in the quiz
+    private int correctAnswersCount = GameState.getWinCount();
+
+    /**
+     * Creates an instance of the AndroidVersionsPagerAdapter.
+     *
+     * @param fragmentManager The FragmentManager that will manage the fragments.
+     * @param lifecycle       The lifecycle of the fragment.
+     * @param context         The context to be used for fragment creation.
+     */
     public AndroidVersionsPagerAdapter(FragmentManager fragmentManager, Lifecycle lifecycle, Context context) {
         super(fragmentManager, lifecycle);
-        quizzesData = new QuizzesData(context);
     }
 
+    /**
+     * Sets the number of correct answers in the quiz.
+     *
+     * @param correctAnswersCount The number of correct answers to be set.
+     */
     public void setCorrectAnswersCount(int correctAnswersCount) {
         this.correctAnswersCount = correctAnswersCount;
     }
 
+    /**
+     * Returns the number of correct answers in the quiz.
+     *
+     * @return The number of correct answers.
+     */
     public int getCorrectAnswersCount() {
         return correctAnswersCount;
     }
 
+    /**
+     * Creates a new fragment based on the position.
+     *
+     * @param position The position in the pager.
+     * @return A new {@link Fragment} representing the quiz page or results page.
+     */
     @Override
     public Fragment createFragment(int position) {
         if (position < 6) {
-            // Passing the current correctAnswersCount to QuizFragment
             return QuizFragment.newInstance(position);
         } else {
             String finishTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
-            int score = (int) (Math.ceil(GameState.getWinCount() / 6.0) * 100); // Ensure correct rounding
-            Quizzes newQuiz = new Quizzes(finishTime, score, 1); // Example of passing some data for the quiz
-            quizzesData.open();
-            quizzesData.storeQuizzes(newQuiz);
-            quizzesData.close();
-
             return ResultsFragment.newInstance(correctAnswersCount, 6, finishTime); // 6 is the number of questions
         }
     }
 
+    /**
+     * Returns the total number of pages in the pager (6 quiz pages and 1 results page).
+     *
+     * @return The number of pages in the pager.
+     */
     @Override
     public int getItemCount() {
-        return 7; // 6 Quiz questions + 1 Results screen
+        return 7;
     }
 }
